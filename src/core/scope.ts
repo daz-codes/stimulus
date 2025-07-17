@@ -43,10 +43,9 @@ export class Scope {
   }
 
   normalizeSelector(selector: string): string {
-    const isDefinedClass = Object.values(this.controller.constructor.classes).some((key) =>
-      this.controller.classes.getAll(key.inclueds(selector)),
-    )
-    isDefinedClass ? `.${selector.replaceAll(" ", ".")}` : selector
+    const classNames = Object.keys((this.classes as any).classesByName)
+    const isDefinedClass = classNames.some((key) => this.classes.getAll(key).includes(selector))
+    return isDefinedClass ? `.${selector.replace(/ /g, ".")}` : selector
   }
 
   containsElement = (element: Element): boolean => {
