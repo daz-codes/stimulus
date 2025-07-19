@@ -30,21 +30,21 @@ export class Scope {
     if (elementWithId && this.containsElement(elementWithId)) {
       return elementWithId
     }
-    const newSelector = this.normalizeSelector(selector)
+    const newSelector = this.classifySelector(selector)
     return this.element.matches(newSelector) ? this.element : this.queryElements(newSelector).find(this.containsElement)
   }
 
   findAllElements(selector: string): Element[] {
-    const newSelector = this.normalizeSelector(selector)
+    const newSelector = this.classifySelector(selector)
     return [
       ...(this.element.matches(newSelector) ? [this.element] : []),
       ...this.queryElements(newSelector).filter(this.containsElement),
     ]
   }
 
-  normalizeSelector(selector: string): string {
+  classifySelector(selector: string): string {
     const classNames = Object.keys((this.classes as any).classesByName)
-    const isDefinedClass = classNames.some((key) => this.classes.getAll(key).includes(selector))
+    const isDefinedClass = classNames.some((key) => (this.classes.getAll(key) as string[]).includes(selector))
     return isDefinedClass ? `.${selector.replace(/ /g, ".")}` : selector
   }
 
